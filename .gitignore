@@ -1,0 +1,41 @@
+.venv/
+__pycache__/
+*.pyc
+artifacts/*.keras
+artifacts/*.h5
+reports/*.png
+reports/*.csv
+reports/*.json
+data/raw/**
+!data/raw/.gitkeep
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python environments and caches
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+
+# Processed datasets
+data/processed/
+
+# Model checkpoints and weights
+*.keras
+*.h5
+*.weights.h5
+
+# Generated reports and predictions
+reports/**/*.png
+reports/**/*.csv
+reports/**/*.json
+
+# Ignore all generated model artifacts and training histories
+artifacts/
+
+# Ignore raw and processed datasets
+data/raw/
+data/processed/

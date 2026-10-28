@@ -1,0 +1,16 @@
+{
+  "image_size": [224, 224],
+  "batch_size": 8,
+  "seed": 42,
+  "train_fraction": 0.70,
+  "validation_fraction": 0.15,
+  "test_fraction": 0.15,
+  "phase1_epochs": 15,
+  "phase2_epochs": 15,
+  "phase1_learning_rate": 0.0001,
+  "phase2_learning_rate": 0.00001,
+  "fine_tune_last_layers": 20,
+  "dropout_rate": 0.40,
+  "mc_passes": 20,
+  "selective_confidence_threshold": 0.70
+}

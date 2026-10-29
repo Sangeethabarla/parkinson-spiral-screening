@@ -1,3 +1,6 @@
+// ============================================
+// SpiralSense - Dashboard Navigation
+// ============================================
 
 const form = document.getElementById("upload-form");
 const input = document.getElementById("image-input");
@@ -11,6 +14,65 @@ const uploadAnother = document.getElementById("upload-another");
 
 let previewUrl = null;
 
+
+// ============================================
+// PAGE / TAB NAVIGATION
+// ============================================
+
+const tabPanels = document.querySelectorAll("[data-tab-panel]");
+const tabLinks = document.querySelectorAll("[data-tab-target]");
+
+function activateTab(tabName) {
+  const targetPanel = document.querySelector(
+    `[data-tab-panel="${tabName}"]`
+  );
+
+  if (!targetPanel) return;
+
+  tabPanels.forEach(panel => {
+    const isActive = panel === targetPanel;
+
+    panel.hidden = !isActive;
+    panel.classList.toggle("active", isActive);
+  });
+
+  // Update sidebar active state.
+  document.querySelectorAll(".nav-link[data-tab-target]").forEach(link => {
+    const isActive = link.dataset.tabTarget === tabName;
+
+    link.classList.toggle("active", isActive);
+
+    if (isActive) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  // Keep the page at the top after navigation.
+  window.scrollTo({
+    top: 0,
+    behavior: "auto"
+  });
+}
+
+tabLinks.forEach(link => {
+  link.addEventListener("click", event => {
+    event.preventDefault();
+
+    const tabName = link.dataset.tabTarget;
+
+    // Allow navigation to Results and Grad-CAM even before
+    // an analysis has been completed, so their empty states work.
+    activateTab(tabName);
+  });
+});
+
+
+// ============================================
+// RESULT STATES
+// ============================================
+
 const states = {
   empty: document.getElementById("empty-state"),
   loading: document.getElementById("loading-state"),
@@ -20,7 +82,9 @@ const states = {
 
 function setState(name) {
   Object.entries(states).forEach(([key, element]) => {
-    element.hidden = key !== name;
+    if (element) {
+      element.hidden = key !== name;
+    }
   });
 
   const labels = {
@@ -30,9 +94,17 @@ function setState(name) {
     result: "COMPLETE"
   };
 
-  document.getElementById("result-status").textContent =
-    labels[name] || "AWAITING IMAGE";
+  const status = document.getElementById("result-status");
+
+  if (status) {
+    status.textContent = labels[name] || "AWAITING IMAGE";
+  }
 }
+
+
+// ============================================
+// FORMATTING HELPERS
+// ============================================
 
 function percent(value) {
   if (value === null || value === undefined || value === "") {
@@ -63,6 +135,11 @@ function showError(message) {
   setState("error");
 }
 
+
+// ============================================
+// GRAD-CAM RESET
+// ============================================
+
 function resetGradCAM() {
   const result = document.getElementById("gradcam-result");
   const image = document.getElementById("gradcam-image");
@@ -73,8 +150,13 @@ function resetGradCAM() {
   placeholder.hidden = false;
 
   placeholder.querySelector("p").textContent =
-    "The model explanation will appear after image analysis.";
+    "Analyze an image first, then return here to view its explanation.";
 }
+
+
+// ============================================
+// IMAGE SELECTION AND PREVIEW
+// ============================================
 
 function selectImage(file) {
   if (!file) return;
@@ -136,6 +218,9 @@ function selectImage(file) {
   closeImageModal();
   resetGradCAM();
   setState("empty");
+
+  // After choosing a new image, return to Dashboard.
+  activateTab("dashboard");
 }
 
 function clearImage() {
@@ -171,22 +256,31 @@ function clearImage() {
   closeImageModal();
   resetGradCAM();
   setState("empty");
+
+  activateTab("dashboard");
 }
 
-// Select an image from the file picker.
+
+// ============================================
+// IMAGE INPUT EVENTS
+// ============================================
+
 input.addEventListener("change", () => {
   if (input.files && input.files.length > 0) {
     selectImage(input.files[0]);
   }
 });
 
-// Remove the currently selected image.
 document.getElementById("remove-image").addEventListener(
   "click",
   clearImage
 );
 
-// Drag-and-drop upload.
+
+// ============================================
+// DRAG AND DROP
+// ============================================
+
 ["dragenter", "dragover"].forEach(type => {
   dropzone.addEventListener(type, event => {
     event.preventDefault();
@@ -209,7 +303,11 @@ dropzone.addEventListener("drop", event => {
   }
 });
 
-// Full-size image modal.
+
+// ============================================
+// FULL-SIZE IMAGE MODAL
+// ============================================
+
 const imageModal = document.getElementById("image-modal");
 const modalImage = document.getElementById("modal-image");
 const modalImageName = document.getElementById("modal-image-name");
@@ -218,6 +316,7 @@ function openImageModal() {
   if (!previewUrl || !input.files[0]) return;
 
   modalImage.src = previewUrl;
+
   modalImageName.textContent =
     document.getElementById("file-name").textContent;
 
@@ -255,7 +354,11 @@ document.addEventListener("keydown", event => {
   }
 });
 
-// Display the Grad-CAM overlay returned by Flask.
+
+// ============================================
+// GRAD-CAM RENDERING
+// ============================================
+
 function renderGradCAM(data) {
   const placeholder = document.getElementById("gradcam-placeholder");
   const result = document.getElementById("gradcam-result");
@@ -282,6 +385,7 @@ function renderGradCAM(data) {
   image.onload = () => {
     result.hidden = false;
     placeholder.hidden = true;
+
     caption.textContent =
       "Grad-CAM overlay — research visualization, not a diagnosis.";
   };
@@ -297,7 +401,11 @@ function renderGradCAM(data) {
   image.src = `${data.gradcam_url}${separator}t=${Date.now()}`;
 }
 
-// Display the model output without changing its prediction settings.
+
+// ============================================
+// PREDICTION RESULT RENDERING
+// ============================================
+
 function renderResult(data) {
   const prediction = String(data.prediction || "Unavailable");
   const isPositive = prediction.toUpperCase().includes("PARKINSON");
@@ -343,15 +451,25 @@ function renderResult(data) {
   setState("result");
 }
 
-// Send the selected image to the existing Flask endpoint.
+
+// ============================================
+// ANALYZE IMAGE
+// ============================================
+
 analyzeButton.addEventListener("click", async () => {
   if (!input.files[0]) return;
 
   const fileToAnalyze = input.files[0];
 
+  // Show the user the prediction page while inference runs.
+  activateTab("results");
   setState("loading");
+
   analyzeButton.disabled = true;
   buttonLabel.textContent = "Analyzing…";
+
+  document.getElementById("preview-status").textContent =
+    "Analysis in progress";
 
   try {
     const payload = new FormData();
@@ -374,14 +492,31 @@ analyzeButton.addEventListener("click", async () => {
 
     renderResult(data);
 
+    document.getElementById("preview-status").textContent =
+      "Analysis complete";
+
+    // Successful analysis automatically opens Prediction Results.
+    activateTab("results");
+
   } catch (error) {
     console.error("Analysis error:", error);
+
     showError(
       error.message || "Could not connect to the local Flask server."
     );
+
+    // Keep the error visible on the Results page.
+    activateTab("results");
 
   } finally {
     analyzeButton.disabled = !input.files[0];
     buttonLabel.textContent = "Analyze image";
   }
 });
+
+
+// ============================================
+// INITIAL PAGE
+// ============================================
+
+activateTab("dashboard");

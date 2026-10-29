@@ -36,9 +36,8 @@ OUTPUT_DIR = PROJECT_ROOT / "reports" / "gradcam"
 IMAGE_SIZE = (224, 224)
 TARGET_LAYER_NAME = "top_conv"
 
-# Class convention:
-# 0 = Healthy
-# 1 = Parkinson's
+# Existing standalone Grad-CAM default.
+# Flask can pass the threshold and target class from predict.py.
 DECISION_THRESHOLD = 0.55
 
 
@@ -48,11 +47,9 @@ DECISION_THRESHOLD = 0.55
 
 def load_image(image_path):
     """
-    Match training preprocessing:
-    - RGB decoding
-    - Resize to 224 x 224
-    - TensorFlow antialias=True
-    - Float32 pixel values in the 0-255 range
+    Match the existing Grad-CAM preprocessing:
+    RGB decoding, 224x224 resizing, antialiasing,
+    and float32 pixel values in the 0-255 range.
     """
 
     image_path = Path(image_path)
@@ -62,7 +59,6 @@ def load_image(image_path):
             f"Image not found: {image_path}"
         )
 
-    # Preserve original dimensions for the overlay.
     original_image = Image.open(
         image_path
     ).convert("RGB")
@@ -121,10 +117,14 @@ def load_trained_model():
     )
 
     try:
-        backbone = model.get_layer("efficientnetv2-s")
+        backbone = model.get_layer(
+            "efficientnetv2-s"
+        )
+
         target_layer = backbone.get_layer(
             TARGET_LAYER_NAME
         )
+
     except ValueError as error:
         raise ValueError(
             "Expected EfficientNetV2-S backbone or target "
@@ -136,7 +136,10 @@ def load_trained_model():
     print(f"Output shape: {model.output_shape}")
     print(f"Backbone: {backbone.name}")
     print(f"Grad-CAM layer: {target_layer.name}")
-    print(f"Decision threshold: {DECISION_THRESHOLD:.2f}")
+    print(
+        f"Default Grad-CAM threshold: "
+        f"{DECISION_THRESHOLD:.2f}"
+    )
 
     return model, backbone, target_layer
 
@@ -168,7 +171,7 @@ def create_backbone_probe(backbone, target_layer):
 def classification_head(model, features):
     """
     Reuse the existing trained classification layers.
-    No new weights are created.
+    No new trainable weights are created.
     """
 
     x = model.get_layer(
@@ -198,14 +201,27 @@ def classification_head(model, features):
 # 6. GENERATE GRAD-CAM
 # ============================================================
 
-def generate_gradcam(model, backbone_probe, image_batch):
+def generate_gradcam(
+    model,
+    backbone_probe,
+    image_batch,
+    decision_threshold=DECISION_THRESHOLD,
+    target_is_parkinson=None,
+):
     """
-    Generate Grad-CAM for the class selected by threshold 0.55.
+    Generate a Grad-CAM heatmap for a single image.
+
+    decision_threshold:
+        Threshold used when selecting the class automatically.
+
+    target_is_parkinson:
+        Optional explicit target class. Flask can pass the class
+        selected by the existing calibrated prediction pipeline.
 
     Returns:
-        heatmap
-        Parkinson probability
-        predicted_parkinson boolean
+        heatmap,
+        uncalibrated PD probability from the Grad-CAM model path,
+        selected Parkinson's class boolean.
     """
 
     image_tensor = tf.convert_to_tensor(
@@ -215,13 +231,12 @@ def generate_gradcam(model, backbone_probe, image_batch):
 
     with tf.GradientTape() as tape:
 
-        # Extract target convolution maps and backbone features.
         conv_outputs, features = backbone_probe(
             image_tensor,
             training=False
         )
 
-        # Track gradients from the class score to feature maps.
+        # Watch the convolution activations for Grad-CAM.
         tape.watch(conv_outputs)
 
         probability_tensor = classification_head(
@@ -231,7 +246,6 @@ def generate_gradcam(model, backbone_probe, image_batch):
 
         pd_probability = probability_tensor[0, 0]
 
-        # Convert sigmoid probability into a logit score.
         epsilon = tf.keras.backend.epsilon()
 
         clipped_probability = tf.clip_by_value(
@@ -245,11 +259,17 @@ def generate_gradcam(model, backbone_probe, image_batch):
             / (1.0 - clipped_probability)
         )
 
-        predicted_parkinson = (
-            pd_probability >= DECISION_THRESHOLD
-        )
+        # Use the explicit target class when supplied by Flask.
+        if target_is_parkinson is None:
+            predicted_parkinson = (
+                pd_probability >= decision_threshold
+            )
+        else:
+            predicted_parkinson = tf.constant(
+                bool(target_is_parkinson)
+            )
 
-        # Explain the class selected by the configured threshold.
+        # Explain the selected class score.
         target_score = tf.where(
             predicted_parkinson,
             logit,
@@ -312,10 +332,10 @@ def save_gradcam(
     output_dir=None
 ):
     """
-    Save the standalone heatmap, overlay and prediction report.
+    Save the standalone heatmap, overlay and JSON report.
 
-    Optional image_path/output_dir arguments allow the batch
-    script to save outputs for different images independently.
+    Optional image_path and output_dir arguments allow Flask
+    to save each uploaded image's explanation separately.
     """
 
     if image_path is None:
@@ -326,7 +346,11 @@ def save_gradcam(
 
     image_path = Path(image_path)
     output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
     image_name = image_path.stem
 
@@ -342,7 +366,7 @@ def save_gradcam(
         output_dir / f"{image_name}_gradcam.json"
     )
 
-    # Resize heatmap to original image dimensions.
+    # Resize the heatmap to the original image dimensions.
     heatmap_image = Image.fromarray(
         np.uint8(
             np.clip(heatmap, 0.0, 1.0) * 255
@@ -383,7 +407,7 @@ def save_gradcam(
 
     plt.close()
 
-    # Create overlay.
+    # Create overlay using the original image.
     original_array = (
         np.asarray(
             original_image,
@@ -429,7 +453,9 @@ def save_gradcam(
         "predicted_class": predicted_class,
         "parkinson_probability": float(pd_probability),
         "healthy_probability": float(1.0 - pd_probability),
-        "decision_threshold": DECISION_THRESHOLD,
+        "decision_threshold": float(
+            DECISION_THRESHOLD
+        ),
         "heatmap_path": str(heatmap_path),
         "overlay_path": str(overlay_path),
         "note": (
@@ -443,7 +469,11 @@ def save_gradcam(
         "w",
         encoding="utf-8"
     ) as file:
-        json.dump(report, file, indent=4)
+        json.dump(
+            report,
+            file,
+            indent=4
+        )
 
     return (
         heatmap_path,

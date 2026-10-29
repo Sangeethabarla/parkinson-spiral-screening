@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171821">
+  <title>SpiralSense | Spiral Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="SpiralSense dashboard">
+        <span class="brand-icon">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M16 3v26M12 6C7 4 4 9 6 13c-4 3-2 9 2 10 1 4 6 4 8 1M20 6c5-2 8 3 6 7 4 3 2 9-2 10-1 4-6 4-8 1M10 10c3 0 4 2 4 4s-2 3-4 2M22 10c-3 0-4 2-4 4s2 3 4 2M10 20c2-2 4-1 4 1M22 20c-2-2-4-1-4 1"/>
+          </svg>
+        </span>
+        <span>
+          <strong>Spiral<span>Sense</span></strong>
+          <small>Spiral Analysis</small>
+        </span>
+      </a>
+
+      <div class="nav-label">WORKSPACE</div>
+
+      <nav>
+        <a class="nav-link active" href="#dashboard"><span>⌂</span> Dashboard</a>
+        <a class="nav-link" href="#upload-section"><span>▧</span> Analyze Image</a>
+        <a class="nav-link" href="#results-section"><span>◈</span> Results</a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="side-art">〰</div>
+        <strong>Focused on better insights</strong>
+        <p>AI-assisted spiral drawing research.</p>
+      </div>
+    </aside>
+
+    <main id="dashboard" class="main">
+
+      <header class="page-header">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            SPIRAL DRAWING ANALYSIS
+          </div>
+          <h1>Parkinson’s Screening Dashboard</h1>
+          <p>Upload a spiral drawing to view the model’s prediction and explanation.</p>
+        </div>
+        <span class="prototype-badge"><i></i> Research prototype</span>
+      </header>
+
+      <section class="input-grid" id="upload-section">
+
+        <article class="panel upload-panel">
+          <div class="section-heading">
+            <span class="step">01</span>
+            <div>
+              <h2>Upload image</h2>
+              <p>Select a clear spiral drawing.</p>
+            </div>
+          </div>
+
+          <form id="upload-form">
+            <label class="dropzone" id="dropzone" for="image-input">
+              <input
+                id="image-input"
+                type="file"
+                name="image"
+                accept="image/png,image/jpeg,image/webp,image/bmp"
+              >
+
+              <span class="upload-symbol">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4.5 15.5v3A1.5 1.5 0 0 0 6 20h12a1.5 1.5 0 0 0 1.5-1.5v-3"/>
+                </svg>
+              </span>
+
+              <strong>Drop your image here</strong>
+              <span class="drop-sub">or <b>browse files</b></span>
+              <small>PNG, JPG, JPEG, WEBP or BMP · Max 10 MB</small>
+            </label>
+
+            <div class="selected-file" id="selected-file" hidden>
+              <img id="selected-thumb" alt="Selected spiral preview">
+
+              <div class="file-meta">
+                <strong id="file-name"></strong>
+                <span id="file-size"></span>
+              </div>
+
+              <label for="image-input" class="replace-button">
+                Change image
+              </label>
+
+              <button type="button" class="remove-button" id="remove-image">
+                Remove
+              </button>
+            </div>
+
+            <div class="upload-another" id="upload-another" hidden>
+              <label for="image-input" class="upload-another-label">
+                <span class="upload-plus">＋</span>
+                <span>
+                  <strong>Upload another image</strong>
+                  <small>Choose a different spiral drawing</small>
+                </span>
+              </label>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel preview-panel">
+          <div class="section-heading">
+            <span class="step">02</span>
+            <div>
+              <h2>Image preview</h2>
+              <p>Click the image to view it full size.</p>
+            </div>
+          </div>
+
+          <div class="image-preview" id="image-preview">
+            <div class="preview-placeholder">
+              <span class="picture-icon">▧</span>
+              <strong>No image selected</strong>
+              <p>Your uploaded spiral will appear here.</p>
+            </div>
+
+            <img
+              id="large-preview"
+              alt="Spiral drawing preview. Click to enlarge."
+              title="Click to view full-size image"
+              hidden
+            >
+          </div>
+
+          <div class="preview-footer">
+            <span class="file-status-dot"></span>
+            <span id="preview-status">Waiting for image</span>
+          </div>
+        </article>
+
+      </section>
+
+      <button class="analyze-button" id="analyze-button" type="button" disabled>
+        <span class="analyze-icon">✳</span>
+        <span id="button-label">Analyze image</span>
+        <span class="button-arrow">↗</span>
+      </button>
+
+      <section class="panel results-panel" id="results-section">
+
+        <div class="results-heading">
+          <div class="section-heading">
+            <span class="step">03</span>
+            <div>
+              <h2>Prediction results</h2>
+              <p>Model output and uncertainty indicators.</p>
+            </div>
+          </div>
+
+          <span class="result-status" id="result-status">AWAITING IMAGE</span>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          <div class="empty-orbit"><span>✳</span></div>
+          <h3>Your analysis will appear here</h3>
+          <p>Upload a spiral drawing and select <b>Analyze image</b>.</p>
+        </div>
+
+        <div id="loading-state" class="loading-state" hidden>
+          <span class="spinner"></span>
+          <h3>Analyzing your image</h3>
+          <p>Running model inference, MC Dropout sampling and Grad-CAM…</p>
+        </div>
+
+        <div id="error-state" class="error-state" hidden>
+          <span class="error-mark">!</span>
+          <div>
+            <strong>Analysis could not be completed</strong>
+            <p id="error-message"></p>
+          </div>
+        </div>
+
+        <div id="result-state" hidden>
+
+          <div class="metric-grid">
+
+            <article class="metric-card prediction-card">
+              <div class="metric-top">
+                <span class="metric-icon">◉</span>
+                <span class="metric-label">PREDICTION</span>
+              </div>
+              <strong id="prediction-value">—</strong>
+              <p id="prediction-caption">Model classification</p>
+            </article>
+
+            <article class="metric-card probability-card">
+              <div class="metric-top">
+                <span class="metric-icon">％</span>
+                <span class="metric-label">PD PROBABILITY</span>
+              </div>
+              <strong id="probability-value">—</strong>
+              <div class="meter">
+                <span id="probability-meter"></span>
+              </div>
+              <p>Calibrated model probability</p>
+            </article>
+
+            <article class="metric-card uncertainty-card">
+              <div class="metric-top">
+                <span class="metric-icon">∿</span>
+                <span class="metric-label">UNCERTAINTY</span>
+              </div>
+              <strong id="uncertainty-value">—</strong>
+              <p>Probability-based proxy</p>
+              <div class="submetric">
+                MC standard deviation <b id="mc-std">—</b>
+              </div>
+            </article>
+
+          </div>
+
+          <div class="explanation-panel">
+            <div class="explanation-heading">
+              <div>
+                <span class="section-heading-icon">✧</span>
+                <h3>Grad-CAM explanation</h3>
+              </div>
+              <span class="subtle-label">VISUAL EXPLANATION</span>
+            </div>
+
+            <div class="gradcam-area" id="gradcam-area">
+              <div class="gradcam-placeholder" id="gradcam-placeholder">
+                <span>▧</span>
+                <strong>Grad-CAM visualization</strong>
+                <p>The model explanation will appear after image analysis.</p>
+              </div>
+
+              <div id="gradcam-result" hidden>
+                <img
+                  id="gradcam-image"
+                  alt="Grad-CAM overlay showing model activation regions"
+                  style="display:block;width:100%;max-width:600px;margin:0 auto;border-radius:12px;"
+                >
+                <p id="gradcam-caption" style="text-align:center;"></p>
+              </div>
+            </div>
+          </div>
+
+          <details class="more-details">
+            <summary>
+              Prediction details <span>＋</span>
+            </summary>
+
+            <div class="details-grid">
+              <span>Decision threshold</span>
+              <strong id="threshold-value">—</strong>
+
+              <span>Raw PD probability</span>
+              <strong id="raw-value">—</strong>
+
+              <span>MC Dropout passes</span>
+              <strong id="passes-value">—</strong>
+
+              <span>Model file</span>
+              <code id="model-value">—</code>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <footer class="disclaimer">
+        <span class="info-icon">i</span>
+        <p>
+          <strong>Research prototype only.</strong>
+          This tool is not a medical device and cannot diagnose or rule out
+          Parkinson’s disease. Do not use its output alone for clinical decisions.
+        </p>
+      </footer>
+
+      <div class="footer-line">
+        SpiralSense <span>·</span> Academic research interface
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Full-size image modal -->
+  <div class="image-modal" id="image-modal" hidden>
+    <div class="image-modal-backdrop" id="image-modal-backdrop"></div>
+
+    <div
+      class="image-modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Full-size spiral image"
+    >
+      <button
+        type="button"
+        class="image-modal-close"
+        id="image-modal-close"
+        aria-label="Close image preview"
+      >×</button>
+
+      <img id="modal-image" alt="Full-size spiral drawing">
+      <p id="modal-image-name"></p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

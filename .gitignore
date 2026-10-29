@@ -39,3 +39,13 @@ artifacts/
 # Ignore raw and processed datasets
 data/raw/
 data/processed/
+
+# Uploaded images and generated Grad-CAM outputs
+uploads/*
+!uploads/.gitkeep
+static/gradcam/*
+!static/gradcam/.gitkeep
+
+# Local backup files
+*.bak
+*.local_backup

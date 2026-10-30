@@ -1,0 +1,6 @@
+{
+  "temperature": 0.40493454839113796,
+  "validation_nll_before": 0.33099914037901706,
+  "validation_nll_after": 0.27028778518414115,
+  "fit_split": "validation"
+}

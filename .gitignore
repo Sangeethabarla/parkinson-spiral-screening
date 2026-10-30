@@ -1,51 +1,75 @@
+# ==========================================
+# PYTHON ENVIRONMENTS
+# ==========================================
 .venv/
-__pycache__/
-*.pyc
-artifacts/*.keras
-artifacts/*.h5
-reports/*.png
-reports/*.csv
-reports/*.json
-data/raw/**
-!data/raw/.gitkeep
+venv/
+ENV/
+env/
 
-# Environment variables and secrets
+# ==========================================
+# PYTHON CACHE FILES
+# ==========================================
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ==========================================
+# ENVIRONMENT VARIABLES AND SECRETS
+# ==========================================
 .env
 .env.*
 !.env.example
 
-# Python environments and caches
-venv/
-ENV/
-.pytest_cache/
-.mypy_cache/
-
-# Processed datasets
-data/processed/
-
-# Model checkpoints and weights
+# ==========================================
+# TRAINED MODELS
+# ==========================================
+# Ignore all model files by default
 *.keras
 *.h5
+*.hdf5
 *.weights.h5
 
-# Generated reports and predictions
+# Allow only the model required by Flask inference
+!artifacts/
+artifacts/*
+!artifacts/parkinson_effnetv2s_classweighted.keras
+!artifacts/temperature.json
+
+# ==========================================
+# DATASETS
+# ==========================================
+# Include raw and processed dataset files
+# Large image files are managed through Git LFS
+
+# ==========================================
+# GENERATED REPORTS
+# ==========================================
 reports/**/*.png
 reports/**/*.csv
 reports/**/*.json
 
-# Ignore all generated model artifacts and training histories
-artifacts/
-
-# Ignore raw and processed datasets
-data/raw/
-data/processed/
-
-# Uploaded images and generated Grad-CAM outputs
+# ==========================================
+# UPLOADS AND GENERATED GRAD-CAM OUTPUTS
+# ==========================================
 uploads/*
 !uploads/.gitkeep
+
 static/gradcam/*
 !static/gradcam/.gitkeep
 
-# Local backup files
+# ==========================================
+# LOCAL BACKUPS
+# ==========================================
 *.bak
 *.local_backup
+
+# ==========================================
+# OPERATING SYSTEM FILES
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+data/raw/spiral/
+data/raw/wave/

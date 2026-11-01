@@ -144,10 +144,15 @@ function resetGradCAM() {
   const result = document.getElementById("gradcam-result");
   const image = document.getElementById("gradcam-image");
   const placeholder = document.getElementById("gradcam-placeholder");
+  const contextRow = document.getElementById("gradcam-context-row");
 
   result.hidden = true;
   image.removeAttribute("src");
   placeholder.hidden = false;
+
+  if (contextRow) {
+    contextRow.hidden = true;
+  }
 
   placeholder.querySelector("p").textContent =
     "Analyze an image first, then return here to view its explanation.";
@@ -388,6 +393,23 @@ function renderGradCAM(data) {
 
     caption.textContent =
       "Grad-CAM overlay — research visualization, not a diagnosis.";
+
+    // Populate dynamic prediction context row
+    const contextRow = document.getElementById("gradcam-context-row");
+    const contextPred = document.getElementById("gradcam-context-prediction");
+    const contextProb = document.getElementById("gradcam-context-probability");
+
+    if (contextRow && data.prediction) {
+      contextRow.hidden = false;
+      if (contextPred) {
+        contextPred.textContent = data.prediction;
+        const isPositive = String(data.prediction).toUpperCase().includes("PARKINSON");
+        contextPred.style.color = isPositive ? "var(--coral)" : "var(--success)";
+      }
+      if (contextProb) {
+        contextProb.textContent = percent(data.calibrated_pd_probability);
+      }
+    }
   };
 
   image.onerror = () => {
@@ -409,6 +431,17 @@ function renderGradCAM(data) {
 function renderResult(data) {
   const prediction = String(data.prediction || "Unavailable");
   const isPositive = prediction.toUpperCase().includes("PARKINSON");
+
+  const predictionCard = document.querySelector(".prediction-card");
+  if (predictionCard) {
+    if (isPositive) {
+      predictionCard.classList.remove("is-healthy");
+      predictionCard.classList.add("is-parkinson");
+    } else {
+      predictionCard.classList.remove("is-parkinson");
+      predictionCard.classList.add("is-healthy");
+    }
+  }
 
   document.getElementById("prediction-value").textContent = prediction;
 
@@ -446,6 +479,22 @@ function renderResult(data) {
 
   document.getElementById("model-value").textContent =
     data.model || "N/A";
+
+  const calibratedEl = document.getElementById("calibrated-value");
+  if (calibratedEl) {
+    calibratedEl.textContent =
+      data.calibrated_pd_probability !== undefined && data.calibrated_pd_probability !== null
+        ? percent(data.calibrated_pd_probability)
+        : "Not available";
+  }
+
+  const mcStdEl = document.getElementById("mc-std-value");
+  if (mcStdEl) {
+    mcStdEl.textContent =
+      data.mc_dropout_standard_deviation !== undefined && data.mc_dropout_standard_deviation !== null
+        ? decimal(data.mc_dropout_standard_deviation)
+        : "N/A";
+  }
 
   renderGradCAM(data);
   setState("result");
@@ -520,3 +569,137 @@ analyzeButton.addEventListener("click", async () => {
 // ============================================
 
 activateTab("dashboard");
+
+// ============================================
+// THEME SWITCHER (DARK / LIGHT TOGGLE)
+// ============================================
+
+const THEME_STORAGE_KEY = "spiralsense_theme";
+
+function getSavedTheme() {
+  return localStorage.getItem(THEME_STORAGE_KEY) || "dark";
+}
+
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.documentElement.setAttribute("data-theme", isLight ? "light" : "dark");
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute("content", isLight ? "#F5F8F6" : "#0B1512");
+  }
+
+  const label = isLight ? "Switch to dark mode" : "Switch to light mode";
+  document.querySelectorAll(".theme-toggle-btn").forEach(button => {
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+  });
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+  const nextTheme = currentTheme === "light" ? "dark" : "light";
+  localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  applyTheme(nextTheme);
+}
+
+document.querySelectorAll(".theme-toggle-btn").forEach(button => {
+  button.addEventListener("click", toggleTheme);
+});
+
+// Initialize active theme
+applyTheme(getSavedTheme());
+
+
+// ============================================
+// EXPLORE THE PROJECT & FAQ ACCORDION
+// ============================================
+
+function initFaqAccordion() {
+  // ============================================
+  // FAQ CATEGORY EXPAND / COLLAPSE HEADER BUTTONS
+  // ============================================
+  const categoryHeaders = document.querySelectorAll("button.faq-category-header");
+
+  categoryHeaders.forEach(headerBtn => {
+    headerBtn.addEventListener("click", () => {
+      const isExpanded = headerBtn.getAttribute("aria-expanded") === "true";
+      const targetId = headerBtn.getAttribute("aria-controls");
+      const targetGroup = document.getElementById(targetId);
+      const categoryCard = headerBtn.closest(".faq-category");
+      const titleText = categoryCard?.querySelector(".faq-category-title")?.textContent?.trim() || "Category";
+
+      if (!targetGroup) return;
+
+      if (isExpanded) {
+        // Collapse category
+        headerBtn.setAttribute("aria-expanded", "false");
+        headerBtn.setAttribute("aria-label", `Expand ${titleText}`);
+        targetGroup.hidden = true;
+        if (categoryCard) categoryCard.classList.add("is-collapsed");
+      } else {
+        // Expand category
+        headerBtn.setAttribute("aria-expanded", "true");
+        headerBtn.setAttribute("aria-label", `Collapse ${titleText}`);
+        targetGroup.hidden = false;
+        if (categoryCard) categoryCard.classList.remove("is-collapsed");
+      }
+    });
+  });
+
+  const faqButtons = document.querySelectorAll(".faq-question");
+
+  faqButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+      const answerId = button.getAttribute("aria-controls");
+      const answerPanel = document.getElementById(answerId);
+
+      if (!answerPanel) return;
+
+      if (isExpanded) {
+        button.setAttribute("aria-expanded", "false");
+        answerPanel.hidden = true;
+      } else {
+        button.setAttribute("aria-expanded", "true");
+        answerPanel.hidden = false;
+      }
+    });
+  });
+
+  const exploreBtn = document.getElementById("btn-explore-project");
+  const exploreBtnLabel = document.getElementById("explore-btn-label");
+  const faqSection = document.getElementById("project-faq-section") || document.getElementById("faq-section");
+
+  if (exploreBtn && faqSection) {
+    exploreBtn.addEventListener("click", () => {
+      const isExpanded = exploreBtn.getAttribute("aria-expanded") === "true";
+
+      if (isExpanded) {
+        // State 1: Collapsed
+        exploreBtn.setAttribute("aria-expanded", "false");
+        exploreBtn.setAttribute("aria-label", "More About This Project");
+        if (exploreBtnLabel) {
+          exploreBtnLabel.textContent = "More About This Project";
+        }
+        faqSection.hidden = true;
+      } else {
+        // State 2: Expanded
+        exploreBtn.setAttribute("aria-expanded", "true");
+        exploreBtn.setAttribute("aria-label", "Hide Project Details");
+        if (exploreBtnLabel) {
+          exploreBtnLabel.textContent = "Hide Project Details";
+        }
+        faqSection.hidden = false;
+
+        // Smoothly scroll to the revealed FAQ section after layout recalculation
+        requestAnimationFrame(() => {
+          faqSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    });
+  }
+}
+
+// Initialize FAQ Accordion
+initFaqAccordion();

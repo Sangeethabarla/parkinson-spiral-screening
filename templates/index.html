@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#171821">
+  <meta name="theme-color" content="#0B1512">
+<script>
+    (function () {
+      var saved = localStorage.getItem("spiralsense_theme") || "dark";
+      document.documentElement.setAttribute("data-theme", saved);
+    })();
+  </script>
 
   <title>SpiralSense | Spiral Analysis</title>
 
@@ -120,10 +126,29 @@
 
           </div>
 
-          <span class="prototype-badge">
-            <i></i>
-            Research prototype
-          </span>
+          <div class="header-actions">
+            <button
+              type="button"
+              class="theme-toggle-btn"
+              aria-label="Switch to light mode"
+              title="Switch to light mode"
+            >
+              <svg class="theme-icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+              <svg class="theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+          </div>
         </header>
 
 
@@ -290,26 +315,8 @@
           type="button"
           disabled
         >
-
-          <span class="analyze-icon" aria-hidden="true">✳</span>
-
           <span id="button-label">Analyze image</span>
-
-          <span class="button-arrow" aria-hidden="true">↗</span>
-
         </button>
-
-
-        <footer class="disclaimer">
-          <span class="info-icon">i</span>
-
-          <p>
-            <strong>Research prototype only.</strong>
-            This tool is not a medical device and cannot diagnose
-            or rule out Parkinson’s disease. Do not use its output
-            alone for clinical decisions.
-          </p>
-        </footer>
 
 
         <div class="footer-line">
@@ -349,10 +356,29 @@
 
           </div>
 
-          <span class="prototype-badge">
-            <i></i>
-            Research prototype
-          </span>
+          <div class="header-actions">
+            <button
+              type="button"
+              class="theme-toggle-btn"
+              aria-label="Switch to light mode"
+              title="Switch to light mode"
+            >
+              <svg class="theme-icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+              <svg class="theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+          </div>
 
         </header>
 
@@ -486,33 +512,81 @@
               </article>
 
             </div>
+            <!-- PREDICTION DETAILS (NON-CLICKABLE INFORMATION CARDS) -->
+            <div class="prediction-details-section">
 
+              <div class="prediction-details-header">
+                <div>
+                  <h3 class="prediction-details-title">Prediction Details</h3>
+                  <p class="prediction-details-subtitle">Technical information about the current model prediction.</p>
+                </div>
+              </div>
 
-            <!-- MORE PREDICTION DETAILS -->
-            <details class="more-details" open>
+              <div class="prediction-details-grid">
 
-              <summary>
-                Prediction details
-                <span>＋</span>
-              </summary>
+                <!-- 1. Decision Threshold (pale mint green) -->
+                <article class="detail-card card-mint">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">🎯</span>
+                    <span class="detail-card-label">Decision threshold</span>
+                  </div>
+                  <strong class="detail-card-value" id="threshold-value">—</strong>
+                  <span class="detail-card-desc">Operating classification cut-off</span>
+                </article>
 
-              <div class="details-grid">
+                <!-- 2. Raw Parkinson's Probability (pale sky blue) -->
+                <article class="detail-card card-blue">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">📈</span>
+                    <span class="detail-card-label">Raw PD probability</span>
+                  </div>
+                  <strong class="detail-card-value" id="raw-value">—</strong>
+                  <span class="detail-card-desc">Direct model output (not diagnosis)</span>
+                </article>
 
-                <span>Decision threshold</span>
-                <strong id="threshold-value">—</strong>
+                <!-- 3. Calibrated Probability (pale lavender) -->
+                <article class="detail-card card-lavender">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">⚖️</span>
+                    <span class="detail-card-label">Calibrated probability</span>
+                  </div>
+                  <strong class="detail-card-value" id="calibrated-value">—</strong>
+                  <span class="detail-card-desc">Temperature-scaled confidence</span>
+                </article>
 
-                <span>Raw PD probability</span>
-                <strong id="raw-value">—</strong>
+                <!-- 4. MC Dropout Passes (pale teal) -->
+                <article class="detail-card card-teal">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">🔄</span>
+                    <span class="detail-card-label">MC Dropout passes</span>
+                  </div>
+                  <strong class="detail-card-value" id="passes-value">—</strong>
+                  <span class="detail-card-desc">Stochastic inference samples</span>
+                </article>
 
-                <span>MC Dropout passes</span>
-                <strong id="passes-value">—</strong>
+                <!-- 5. Uncertainty Estimate (pale amber) -->
+                <article class="detail-card card-amber">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">∿</span>
+                    <span class="detail-card-label">MC Std. deviation</span>
+                  </div>
+                  <strong class="detail-card-value" id="mc-std-value">—</strong>
+                  <span class="detail-card-desc">Predictive variability estimate</span>
+                </article>
 
-                <span>Model file</span>
-                <code id="model-value">—</code>
+                <!-- 6. Model File (neutral light gray / pale slate) -->
+                <article class="detail-card card-neutral">
+                  <div class="detail-card-head">
+                    <span class="detail-card-icon" aria-hidden="true">📦</span>
+                    <span class="detail-card-label">Model file</span>
+                  </div>
+                  <code class="detail-card-value detail-code" id="model-value">—</code>
+                  <span class="detail-card-desc">Active trained artifact</span>
+                </article>
 
               </div>
 
-            </details>
+            </div>
 
 
             <!-- NAVIGATION TO GRAD-CAM -->
@@ -542,8 +616,8 @@
           <span class="info-icon">i</span>
 
           <p>
-            <strong>Research prototype only.</strong>
-            This output is not a medical diagnosis and should not
+            <strong>Clinical Analysis Notice:</strong>
+            This output is an AI decision-support indicator and should not
             be used alone for clinical decisions.
           </p>
         </footer>
@@ -581,10 +655,29 @@
 
           </div>
 
-          <span class="prototype-badge">
-            <i></i>
-            Visual explanation
-          </span>
+          <div class="header-actions">
+            <button
+              type="button"
+              class="theme-toggle-btn"
+              aria-label="Switch to light mode"
+              title="Switch to light mode"
+            >
+              <svg class="theme-icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+              <svg class="theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+          </div>
 
         </header>
 
@@ -655,18 +748,168 @@
           </div>
 
 
-          <div class="gradcam-notes">
+          <!-- UNDERSTANDING GRAD-CAM INTERPRETATION PANEL -->
+          <section class="gradcam-interpretation-panel" aria-label="Understanding Your Grad-CAM Visualization">
 
-            <h3>How to read this heatmap</h3>
+            <!-- A. Header -->
+            <header class="interpretation-header">
+              <div class="interpretation-title-area">
+                <span class="interpretation-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/>
+                    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/>
+                  </svg>
+                </span>
+                <div>
+                  <h3>Understanding Your Grad-CAM Visualization</h3>
+                  <p>Explore how different image regions contribute to the model’s prediction.</p>
+                </div>
+              </div>
+              <span class="interpretation-badge">AI EXPLAINABILITY</span>
+            </header>
 
-            <p>
-              Grad-CAM highlights image regions that contribute
-              to the model’s output. Highlighted areas are an
-              explanation of model behavior, not proof of a
-              medical finding.
-            </p>
+            <!-- D. Dynamic Prediction Context -->
+            <div id="gradcam-context-row" class="gradcam-context-row" hidden>
+              <div class="context-item">
+                <span class="context-label">MODEL PREDICTION</span>
+                <strong id="gradcam-context-prediction">—</strong>
+              </div>
+              <div class="context-divider" aria-hidden="true"></div>
+              <div class="context-item">
+                <span class="context-label">CALIBRATED PD PROBABILITY</span>
+                <strong id="gradcam-context-probability">—</strong>
+              </div>
+              <div class="context-actions">
+                <button type="button" class="context-return-btn secondary-button" data-tab-target="results">
+                  <span>← View Prediction Results</span>
+                </button>
+              </div>
+            </div>
 
-          </div>
+            <!-- B. Heatmap Color Legend -->
+            <div class="legend-container">
+              <div class="legend-header">
+                <span class="legend-title">HEATMAP RELATIVE ACTIVATION SCALE</span>
+                <span class="legend-hint">Colormap: Jet (Normalized 0.0 – 1.0)</span>
+              </div>
+
+              <div class="legend-bar-wrapper">
+                <div class="legend-gradient-bar" aria-hidden="true"></div>
+                <div class="legend-swatches">
+                  <div class="swatch-item">
+                    <span class="swatch-dot swatch-blue"></span>
+                    <div class="swatch-text">
+                      <strong>Blue / Purple</strong>
+                      <span>Lower relative activation</span>
+                    </div>
+                  </div>
+                  <div class="swatch-item">
+                    <span class="swatch-dot swatch-cyan"></span>
+                    <div class="swatch-text">
+                      <strong>Cyan</strong>
+                      <span>Lower-to-moderate relative activation</span>
+                    </div>
+                  </div>
+                  <div class="swatch-item">
+                    <span class="swatch-dot swatch-green"></span>
+                    <div class="swatch-text">
+                      <strong>Green / Yellow</strong>
+                      <span>Moderate-to-higher relative activation</span>
+                    </div>
+                  </div>
+                  <div class="swatch-item">
+                    <span class="swatch-dot swatch-orange"></span>
+                    <div class="swatch-text">
+                      <strong>Orange</strong>
+                      <span>High relative activation</span>
+                    </div>
+                  </div>
+                  <div class="swatch-item">
+                    <span class="swatch-dot swatch-red"></span>
+                    <div class="swatch-text">
+                      <strong>Red / Pink</strong>
+                      <span>Strong relative activation</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="legend-disclaimer">
+                Colors represent relative activation within this visualization. They do not represent disease probability, symptom severity, or a medical risk scale.
+              </p>
+            </div>
+
+            <!-- C. Bullet-point interpretation cards -->
+            <div class="interpretation-cards-grid">
+              <!-- Card 1 -->
+              <article class="interpretation-card">
+                <div class="card-icon-wrap icon-emerald" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 2a10 10 0 0 1 0 20"></path>
+                    <path d="M12 6a6 6 0 0 1 0 12"></path>
+                  </svg>
+                </div>
+                <h4>What the colors mean</h4>
+                <p>Brighter or warmer regions generally indicate areas that contribute more strongly to the selected model output. Cooler regions generally indicate lower relative activation. Interpret the colors together with the complete spiral drawing.</p>
+              </article>
+
+              <!-- Card 2 -->
+              <article class="interpretation-card">
+                <div class="card-icon-wrap icon-cyan" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="22" y1="12" x2="18" y2="12"></line>
+                    <line x1="6" y1="12" x2="2" y2="12"></line>
+                    <line x1="12" y1="6" x2="12" y2="2"></line>
+                    <line x1="12" y1="22" x2="12" y2="18"></line>
+                  </svg>
+                </div>
+                <h4>Where the model is focusing</h4>
+                <p>The highlighted areas show image features that influence the model’s output. These may overlap with parts of the drawn spiral, its curves, turns, edges, or other visible image features. A highlighted area does not establish that a specific drawing irregularity exists.</p>
+              </article>
+
+              <!-- Card 3 -->
+              <article class="interpretation-card">
+                <div class="card-icon-wrap icon-purple" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </div>
+                <h4>How to read the spiral</h4>
+                <p>Look at the heatmap alongside the original drawing. Observe the overall spiral shape and visible drawing characteristics rather than interpreting a single highlighted spot in isolation. The overlay explains model behavior; it is not an independent clinical assessment.</p>
+              </article>
+
+              <!-- Card 4 -->
+              <article class="interpretation-card">
+                <div class="card-icon-wrap icon-amber" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                  </svg>
+                </div>
+                <h4>What the visualization cannot tell you</h4>
+                <p>Grad-CAM does not diagnose Parkinson’s disease, measure disease severity, or establish the cause of a drawing feature. The highlighted regions are model explanations, not proof of a medical finding.</p>
+              </article>
+            </div>
+
+            <!-- E. Important interpretation notice -->
+            <div class="interpretation-notice">
+              <span class="notice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+              <div>
+                <strong>Research interpretation only</strong>
+                <p>Grad-CAM visualizations show which image regions influence a model’s output. They are not a standalone diagnostic tool and should not be used to confirm or rule out Parkinson’s disease.</p>
+              </div>
+            </div>
+
+          </section>
 
         </section>
 
@@ -703,10 +946,29 @@
 
           </div>
 
-          <span class="prototype-badge">
-            <i></i>
-            Academic research
-          </span>
+          <div class="header-actions">
+            <button
+              type="button"
+              class="theme-toggle-btn"
+              aria-label="Switch to light mode"
+              title="Switch to light mode"
+            >
+              <svg class="theme-icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+              <svg class="theme-icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+          </div>
 
         </header>
 
@@ -721,7 +983,7 @@
             <h2>What is SpiralSense?</h2>
 
             <p>
-              SpiralSense is an academic research prototype that
+              SpiralSense is an advanced AI clinical screening interface that
               explores AI-assisted screening of Parkinson’s
               disease from spiral hand-drawing images. It provides
               a model prediction and a visual explanation to help
@@ -771,7 +1033,7 @@
             <h2>Responsible use and limitations</h2>
 
             <p>
-              SpiralSense is a research prototype, not a medical
+              SpiralSense is an assistive AI tool, not a standalone medical
               device. Predictions may be wrong or uncertain and
               must not be used alone to diagnose, rule out, or
               make treatment decisions about Parkinson’s disease.
@@ -779,6 +1041,793 @@
 
           </article>
 
+
+        </section>
+
+        <!-- EXPLORE THE PROJECT SECTION -->
+        <section class="explore-project-section">
+          <div class="explore-content">
+            <div class="explore-badge">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>RESEARCH KNOWLEDGE BASE</span>
+            </div>
+            <h2>Explore the Project</h2>
+            <p>
+              Have questions about the model, datasets, evaluation, or how to interpret your results? Find answers below.
+            </p>
+            <button
+              type="button"
+              id="btn-explore-project"
+              class="explore-project-btn"
+              aria-label="More About This Project"
+              aria-expanded="false"
+              aria-controls="project-faq-section"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <span id="explore-btn-label">More About This Project</span>
+              <svg class="explore-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- FREQUENTLY ASKED QUESTIONS SECTION (TOGGLED BY MORE ABOUT THIS PROJECT) -->
+        <section class="faq-section" id="project-faq-section" aria-labelledby="faq-main-title" hidden>
+          <div class="faq-header">
+            <span class="faq-eyebrow">FREQUENTLY ASKED QUESTIONS</span>
+            <h2 id="faq-main-title">Project Technical Documentation &amp; FAQ</h2>
+            <p>Clear, verified answers about SpiralSense, its models, datasets, evaluation, and limitations.</p>
+          </div>
+
+          <!-- Category A — About SpiralSense -->
+          <div class="faq-category is-collapsed" id="cat-about">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-about"
+              aria-expanded="false"
+              aria-controls="cat-group-about"
+              aria-label="Expand Category A — About SpiralSense"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category A — About SpiralSense</h3>
+                <p class="faq-category-desc">Fundamental overview of the SpiralSense research platform, workflow, and capabilities.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-about" hidden>
+              <!-- Q1 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q1" aria-expanded="false" aria-controls="faq-ans-q1">
+                  <span class="faq-q-number">Q1.</span>
+                  <span class="faq-q-text">What is SpiralSense?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q1" role="region" aria-labelledby="faq-q1" hidden>
+                  <div class="faq-answer-inner">
+                    <p>SpiralSense is an academic research application designed to explore AI-assisted screening of Parkinson’s disease using computerized spiral hand-drawing analysis. It applies an EfficientNetV2-S deep convolutional neural network alongside Monte Carlo (MC) Dropout uncertainty estimation, temperature calibration, and Grad-CAM visual interpretability heatmaps.</p>
+<p><strong>Important:</strong> SpiralSense is strictly an exploratory research and educational prototype. It is not an FDA-cleared or CE-marked medical device and cannot diagnose or rule out Parkinson’s disease.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q2 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q2" aria-expanded="false" aria-controls="faq-ans-q2">
+                  <span class="faq-q-number">Q2.</span>
+                  <span class="faq-q-text">How does SpiralSense work?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q2" role="region" aria-labelledby="faq-q2" hidden>
+                  <div class="faq-answer-inner">
+                    <p>The SpiralSense screening pipeline processes each drawing through five verified, sequential stages:</p>
+<ol>
+  <li><strong>Image Upload &amp; Validation:</strong> The user selects a spiral drawing (PNG, JPG, BMP, or WEBP up to 10 MB).</li>
+  <li><strong>Preprocessing:</strong> The image is decoded in grayscale, resized to 224&times;224 pixels with antialiasing, converted to float32 retaining the 0–255 pixel range, and expanded to a 3-channel RGB tensor (<code>src/common.py</code>).</li>
+  <li><strong>Deterministic &amp; Stochastic Inference:</strong> The drawing passes through the trained EfficientNetV2-S model to obtain a raw sigmoid probability. Concurrently, 20 stochastic MC Dropout passes run through the classifier to quantify prediction variability (<code>src/predict.py</code>).</li>
+  <li><strong>Temperature Calibration &amp; Decision:</strong> The raw probability is scaled using a validation-fitted temperature (<em>T</em> &asymp; 0.4049, <code>artifacts/temperature.json</code>). If calibrated probability &ge; 0.58 (58.0%), the output is classified as <em>PARKINSON'S</em>; otherwise <em>HEALTHY</em>.</li>
+  <li><strong>Explainability &amp; Cleanup:</strong> Grad-CAM generates a gradient-weighted activation heatmap from the <code>top_conv</code> layer using the Jet colormap, while the uploaded temporary image file is immediately deleted from disk.</li>
+</ol>
+                  </div>
+                </div>
+              </div>
+              <!-- Q3 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q3" aria-expanded="false" aria-controls="faq-ans-q3">
+                  <span class="faq-q-number">Q3.</span>
+                  <span class="faq-q-text">What image formats are supported?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q3" role="region" aria-labelledby="faq-q3" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Verified from the Flask upload configuration in <code>app.py</code>:</p>
+<ul>
+  <li><strong>Supported file formats:</strong> PNG (<code>.png</code>), JPEG/JPG (<code>.jpg</code>, <code>.jpeg</code>), BMP (<code>.bmp</code>), and WEBP (<code>.webp</code>).</li>
+  <li><strong>Maximum file size:</strong> 10 Megabytes (<code>MAX_CONTENT_LENGTH = 10 * 1024 * 1024</code> bytes).</li>
+</ul>
+<p>Files exceeding 10 MB or containing unapproved file extensions are rejected automatically before processing.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q4 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q4" aria-expanded="false" aria-controls="faq-ans-q4">
+                  <span class="faq-q-number">Q4.</span>
+                  <span class="faq-q-text">Can SpiralSense diagnose Parkinson’s disease?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q4" role="region" aria-labelledby="faq-q4" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>No.</strong> SpiralSense cannot diagnose, confirm, or rule out Parkinson’s disease.</p>
+<p>A clinical diagnosis of Parkinson’s disease requires comprehensive evaluation by licensed neurologists, incorporating formal motor examinations (such as the MDS-UPDRS scale), patient history, non-motor symptom evaluation, response to dopaminergic therapy, and neuroimaging (such as DaTscan). SpiralSense is an algorithmic research prototype evaluating visual drawing patterns and must never be used as a substitute for qualified medical care.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category B — Models & Architecture -->
+          <div class="faq-category is-collapsed" id="cat-models">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-models"
+              aria-expanded="false"
+              aria-controls="cat-group-models"
+              aria-label="Expand Category B — Models & Architecture"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category B — Models & Architecture</h3>
+                <p class="faq-category-desc">Neural network architecture, transfer learning, calibration, thresholding, and uncertainty estimation.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-models" hidden>
+              <!-- Q5 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q5" aria-expanded="false" aria-controls="faq-ans-q5">
+                  <span class="faq-q-number">Q5.</span>
+                  <span class="faq-q-text">Which deep-learning model does SpiralSense use?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q5" role="region" aria-labelledby="faq-q5" hidden>
+                  <div class="faq-answer-inner">
+                    <p>SpiralSense utilizes <strong>EfficientNetV2-S</strong> (small variant), loaded from <code>artifacts/parkinson_effnetv2s_classweighted.keras</code>.</p>
+<p>The network architecture consists of an ImageNet-pretrained convolutional backbone coupled to a custom classification head:</p>
+<ul>
+  <li>Global Average Pooling layer (<code>GlobalAveragePooling2D</code>)</li>
+  <li>Classifier Dropout layer (<code>Dropout</code>)</li>
+  <li>Feature Dense layer (<code>Dense(128, activation="relu")</code>)</li>
+  <li>Feature Dropout layer (<code>Dropout</code>)</li>
+  <li>Final Sigmoid layer (<code>Dense(1, activation="sigmoid")</code>) outputting the probability of Parkinson’s disease.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Q6 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q6" aria-expanded="false" aria-controls="faq-ans-q6">
+                  <span class="faq-q-number">Q6.</span>
+                  <span class="faq-q-text">Why was this model selected?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q6" role="region" aria-labelledby="faq-q6" hidden>
+                  <div class="faq-answer-inner">
+                    <p>EfficientNetV2-S was selected based on the project's Review-I specification and comparative architecture analysis. Compared to older CNNs such as VGG16/19 or standard ResNet architectures, EfficientNetV2-S introduces fused-MBConv layers and progressive regularization, delivering superior parameter efficiency (approx. 21.5M parameters vs. 138M in VGG16) and stronger feature representation on compact biomedical datasets with minimal risk of catastrophic overfitting.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q7 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q7" aria-expanded="false" aria-controls="faq-ans-q7">
+                  <span class="faq-q-number">Q7.</span>
+                  <span class="faq-q-text">What is transfer learning?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q7" role="region" aria-labelledby="faq-q7" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Transfer learning is a machine learning paradigm where knowledge gained from solving a general problem is transferred to a specialized task. Rather than training a deep network from scratch with random weights—which requires tens of thousands of medical drawings—SpiralSense reuses convolutional feature extractors pretrained on ImageNet (1.4 million images). The network's early layers already know how to identify edges, curves, and textures; training fine-tunes higher-level filters to detect tremor micro-irregularities in spiral traces.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q8 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q8" aria-expanded="false" aria-controls="faq-ans-q8">
+                  <span class="faq-q-number">Q8.</span>
+                  <span class="faq-q-text">What is the difference between the model’s raw and calibrated probabilities?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q8" role="region" aria-labelledby="faq-q8" hidden>
+                  <div class="faq-answer-inner">
+                    <p>The differences are mathematical and interpretative:</p>
+<ul>
+  <li><strong>Raw probability:</strong> The unadjusted numerical output directly from the model's final sigmoid neuron, ranging from 0.0 to 1.0. Modern deep networks tend to be overconfident, pushing raw scores toward 0.0 or 1.0.</li>
+  <li><strong>Calibrated probability:</strong> Scaled probability adjusted using Platt temperature scaling (<em>T</em> &asymp; 0.4049, documented in <code>artifacts/temperature.json</code>). Temperature scaling rescales the logit values before the sigmoid function to minimize negative log-likelihood (NLL) on validation data.</li>
+</ul>
+<p><em>Important note:</em> Temperature calibration aligns confidence scores with empirical error rates, but it does not make the score a clinical probability of medical diagnosis.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q9 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q9" aria-expanded="false" aria-controls="faq-ans-q9">
+                  <span class="faq-q-number">Q9.</span>
+                  <span class="faq-q-text">What does the decision threshold mean?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q9" role="region" aria-labelledby="faq-q9" hidden>
+                  <div class="faq-answer-inner">
+                    <p>The decision threshold is the operational cutoff value used to convert continuous calibrated probability into a discrete binary classification. SpiralSense uses a verified default threshold of <strong>0.58 (58.0%)</strong> in <code>src/predict.py</code>:</p>
+<ul>
+  <li>Calibrated probability &ge; 0.58 &rarr; <strong>PARKINSON'S</strong></li>
+  <li>Calibrated probability &lt; 0.58 &rarr; <strong>HEALTHY</strong></li>
+</ul>
+<p>This operating point was configured during model validation to prioritize sensitivity (identifying true positive tremor signals) while maintaining balanced specificity, rather than assuming a naive 0.50 cutoff. It is an algorithmic decision parameter, not an individual clinical risk threshold.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q10 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q10" aria-expanded="false" aria-controls="faq-ans-q10">
+                  <span class="faq-q-number">Q10.</span>
+                  <span class="faq-q-text">What is MC Dropout, and why is it used?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q10" role="region" aria-labelledby="faq-q10" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Monte Carlo (MC) Dropout approximates Bayesian uncertainty in neural networks. Standard neural networks disable dropout during testing, yielding only a single deterministic prediction. With MC Dropout, dropout layers remain active during inference, and the model runs <strong>20 stochastic forward passes</strong> (<code>MC_DROPOUT_PASSES = 20</code> in <code>src/predict.py</code>).</p>
+<p>This generates a probability distribution:</p>
+<ul>
+  <li><strong>Mean (&mu;):</strong> The average predicted probability across all 20 passes.</li>
+  <li><strong>Standard Deviation (&sigma;) &amp; Variance (&sigma;<sup>2</sup>):</strong> Measures predictive instability across subnetworks.</li>
+</ul>
+<p>Low standard deviation indicates consistent subnetwork agreement, whereas high variance warns that the model is sensitive to subtle perturbations. MC Dropout is an engineering proxy for model variability, not a complete measure of clinical diagnostic uncertainty.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category C — Datasets & Preprocessing -->
+          <div class="faq-category is-collapsed" id="cat-datasets">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-datasets"
+              aria-expanded="false"
+              aria-controls="cat-group-datasets"
+              aria-label="Expand Category C — Datasets & Preprocessing"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category C — Datasets & Preprocessing</h3>
+                <p class="faq-category-desc">Dataset sources, image sample counts, preprocessing steps, train/test partitions, and leakage mitigation.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-datasets" hidden>
+              <!-- Q11 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q11" aria-expanded="false" aria-controls="faq-ans-q11">
+                  <span class="faq-q-number">Q11.</span>
+                  <span class="faq-q-text">Which datasets were used in this project?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q11" role="region" aria-labelledby="faq-q11" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Two distinct datasets are verified and present in the project repository:</p>
+<ol>
+  <li><strong>Original Spiral Drawing Dataset (<code>data/raw/drawings/spiral/</code>):</strong> The benchmark dataset widely studied in machine learning literature (Zham et al. / Kaggle Parkinson's Drawing Dataset), used for model development and internal evaluation.</li>
+  <li><strong>NewHandPD Dataset (<code>data/raw/newhandpd/</code>):</strong> An independent Brazilian clinical hand-drawing dataset (Pereira et al.), containing spiral drawings from Parkinson's patients and healthy controls, used strictly as an external evaluation cohort.</li>
+</ol>
+<p><em>Note:</em> Wave drawings also exist in raw repository storage, but SpiralSense specifically focuses on spiral drawing analysis.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q12 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q12" aria-expanded="false" aria-controls="faq-ans-q12">
+                  <span class="faq-q-number">Q12.</span>
+                  <span class="faq-q-text">How many images are in each dataset?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q12" role="region" aria-labelledby="faq-q12" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Verified image counts from repository storage audits:</p>
+<ul>
+  <li><strong>Original Spiral Dataset: 102 total images</strong>
+    <ul>
+      <li>Training split: 72 images (36 Healthy, 36 Parkinson's)</li>
+      <li>Testing split: 30 images (15 Healthy, 15 Parkinson's)</li>
+    </ul>
+  </li>
+  <li><strong>NewHandPD External Benchmark: 264 total images</strong>
+    <ul>
+      <li>Healthy control group: 140 images</li>
+      <li>Parkinson's patient group: 124 images</li>
+    </ul>
+  </li>
+  <li><strong>Same-test comparison cohort:</strong> 98 held-out images evaluated in <code>artifacts/same_test_comparison</code>.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Q13 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q13" aria-expanded="false" aria-controls="faq-ans-q13">
+                  <span class="faq-q-number">Q13.</span>
+                  <span class="faq-q-text">How are spiral images preprocessed?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q13" role="region" aria-labelledby="faq-q13" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Verified directly from <code>src/common.py</code> (<code>load_image()</code>):</p>
+<ul>
+  <li><strong>Grayscale reading:</strong> Decoded as a single-channel grayscale image (<code>channels=1</code>).</li>
+  <li><strong>Resizing:</strong> Resized to 224&times;224 pixels with antialiasing interpolation.</li>
+  <li><strong>Float conversion:</strong> Cast to <code>tf.float32</code> while preserving the standard 0–255 numerical pixel range (EfficientNetV2 incorporates internal rescaling).</li>
+  <li><strong>3-channel expansion:</strong> Converted from grayscale to RGB (<code>tf.image.grayscale_to_rgb</code>) to feed the 3-channel input expected by the backbone.</li>
+</ul>
+<p>No synthetic data augmentation, morphological erosion, or bilateral filtering is applied at test-time inference.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q14 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q14" aria-expanded="false" aria-controls="faq-ans-q14">
+                  <span class="faq-q-number">Q14.</span>
+                  <span class="faq-q-text">How was the dataset split?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q14" role="region" aria-labelledby="faq-q14" hidden>
+                  <div class="faq-answer-inner">
+                    <p>In the original spiral drawing dataset, the benchmark was split into 72 training images (36 healthy, 36 Parkinson's) and 30 testing images (15 healthy, 15 Parkinson's). Additionally, project experimentation documented in <code>PROJECT_NOTES.md</code> and <code>evaluate_corrected_split.py</code> investigated patient-level 70/15/15 partitions to guarantee that all drawings from a single individual remain confined to a single split.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q15 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q15" aria-expanded="false" aria-controls="faq-ans-q15">
+                  <span class="faq-q-number">Q15.</span>
+                  <span class="faq-q-text">How does the project reduce data leakage?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q15" role="region" aria-labelledby="faq-q15" hidden>
+                  <div class="faq-answer-inner">
+                    <p>The project employs three verified safeguards to prevent overoptimistic evaluation:</p>
+<ul>
+  <li><strong>Patient-level grouping:</strong> Evaluating split configurations where all drawings from a given participant identifier stay grouped within either training or testing, preventing identity memorization.</li>
+  <li><strong>Split-isolated calibration:</strong> Temperature calibration (<em>T</em> &asymp; 0.4049) was fitted strictly on validation split cross-entropy loss, ensuring the final test split remained completely untouched during hyperparameter tuning.</li>
+  <li><strong>Independent external evaluation:</strong> Testing against <strong>NewHandPD</strong> (264 drawings collected at an independent clinic with different scanners and cohorts) eliminates any possibility of internal partition leakage.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category D — Performance & Evaluation -->
+          <div class="faq-category is-collapsed" id="cat-eval">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-eval"
+              aria-expanded="false"
+              aria-controls="cat-group-eval"
+              aria-label="Expand Category D — Performance & Evaluation"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category D — Performance & Evaluation</h3>
+                <p class="faq-category-desc">Empirical evaluation metrics, cross-dataset validation, error modes, and clinical validity.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-eval" hidden>
+              <!-- Q16 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q16" aria-expanded="false" aria-controls="faq-ans-q16">
+                  <span class="faq-q-number">Q16.</span>
+                  <span class="faq-q-text">How well does the model perform?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q16" role="region" aria-labelledby="faq-q16" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Verified from repository evaluation reports (<code>artifacts/combined_evaluation/combined_metrics.csv</code> and <code>summary_metrics.json</code>):</p>
+<div class="faq-table-wrap">
+  <table class="faq-metrics-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Original Test Set (30 imgs)</th>
+        <th>NewHandPD External (264 imgs @ 0.58)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Accuracy</td><td>83.33%</td><td>84.47% (84.09% @ 0.50)</td></tr>
+      <tr><td>Sensitivity / Recall</td><td>93.33%</td><td>86.29% (89.52% @ 0.50)</td></tr>
+      <tr><td>Specificity</td><td>73.33%</td><td>82.86% (79.29% @ 0.50)</td></tr>
+      <tr><td>Precision</td><td>77.78%</td><td>81.68% (79.29% @ 0.50)</td></tr>
+      <tr><td>F1-Score</td><td>84.85%</td><td>83.92% (84.09% @ 0.50)</td></tr>
+      <tr><td>ROC-AUC</td><td>0.9244 (92.4%)</td><td>0.9104 (91.0%)</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>The model demonstrated 93.3% sensitivity on the original test set and maintained strong 84.5% accuracy and 0.910 ROC-AUC on the external NewHandPD dataset.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q17 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q17" aria-expanded="false" aria-controls="faq-ans-q17">
+                  <span class="faq-q-number">Q17.</span>
+                  <span class="faq-q-text">What is the difference between internal and external evaluation?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q17" role="region" aria-labelledby="faq-q17" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>Internal evaluation</strong> tests the model on held-out images from the same original source and acquisition environment as the training data (e.g., 30 test images from the original spiral set). This assesses standard within-distribution generalization.</p>
+<p><strong>External evaluation</strong> evaluates the trained model on an entirely distinct dataset (<strong>NewHandPD</strong>, 264 images) collected by different medical researchers in Brazil, using different pens, digitizers, and patient cohorts. Achieving 84.5% accuracy on NewHandPD provides evidence of out-of-distribution robustness.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q18 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q18" aria-expanded="false" aria-controls="faq-ans-q18">
+                  <span class="faq-q-number">Q18.</span>
+                  <span class="faq-q-text">Does a high accuracy mean the model is clinically reliable?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q18" role="region" aria-labelledby="faq-q18" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>No.</strong> High benchmark accuracy in an AI research study does not establish clinical readiness. Real-world medical reliability requires validation across thousands of patients spanning varying disease stages (early vs. advanced), diverse demographics, co-morbid tremors (such as Essential Tremor), and uncontrolled drawing environments. Research benchmarks on 102 or 264 images are exploratory proof-of-concept milestones.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q19 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q19" aria-expanded="false" aria-controls="faq-ans-q19">
+                  <span class="faq-q-number">Q19.</span>
+                  <span class="faq-q-text">Can the model make mistakes?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q19" role="region" aria-labelledby="faq-q19" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>Yes.</strong> The model produces both false positives (predicting Parkinson's when absent) and false negatives (missing true cases). Factors that can mislead predictions include:</p>
+<ul>
+  <li>Non-Parkinsonian tremors, including Essential Tremor, physiologic fatigue, or anxiety.</li>
+  <li>Arthritis, muscular weakness, or joint stiffness altering drawing smoothness.</li>
+  <li>Paper texture, non-standard pens, scanning resolution, or cropping borders.</li>
+  <li>Spirals drawn with unusual tightness, spacing, or orientation compared to training distributions.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category E — Grad-CAM & Explainability -->
+          <div class="faq-category is-collapsed" id="cat-gradcam">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-gradcam"
+              aria-expanded="false"
+              aria-controls="cat-group-gradcam"
+              aria-label="Expand Category E — Grad-CAM & Explainability"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category E — Grad-CAM & Explainability</h3>
+                <p class="faq-category-desc">Visual heatmap generation, color meaning, layer selection, and interpretability limitations.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-gradcam" hidden>
+              <!-- Q20 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q20" aria-expanded="false" aria-controls="faq-ans-q20">
+                  <span class="faq-q-number">Q20.</span>
+                  <span class="faq-q-text">What is Grad-CAM?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q20" role="region" aria-labelledby="faq-q20" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Grad-CAM (Gradient-weighted Class Activation Mapping) is an explainability method for convolutional neural networks. It computes the mathematical gradients of the model's output score with respect to feature maps in the final convolutional layer (<code>top_conv</code> in EfficientNetV2-S). Weighting feature maps by these gradients produces a 2D activation heatmap that highlights which spatial regions in the image most strongly guided the model's classification.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q21 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q21" aria-expanded="false" aria-controls="faq-ans-q21">
+                  <span class="faq-q-number">Q21.</span>
+                  <span class="faq-q-text">What do the Grad-CAM colors mean?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q21" role="region" aria-labelledby="faq-q21" hidden>
+                  <div class="faq-answer-inner">
+                    <p>SpiralSense uses Matplotlib's continuous <strong>Jet colormap</strong>, normalized per image from 0.0 (minimum relative activation) to 1.0 (maximum relative activation):</p>
+<ul>
+  <li><strong>Blue / Purple:</strong> Lower relative activation (minimal influence on prediction).</li>
+  <li><strong>Cyan:</strong> Lower-to-moderate relative activation.</li>
+  <li><strong>Green / Yellow:</strong> Moderate-to-higher relative activation.</li>
+  <li><strong>Orange:</strong> High relative activation.</li>
+  <li><strong>Red / Pink:</strong> Strongest relative activation (greatest influence on prediction).</li>
+</ul>
+<p><em>Important note:</em> The heatmap reflects <em>relative attention</em> for that specific drawing; it does not represent an absolute disease severity score or a clinical abnormality index.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q22 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q22" aria-expanded="false" aria-controls="faq-ans-q22">
+                  <span class="faq-q-number">Q22.</span>
+                  <span class="faq-q-text">Does a red or bright region indicate Parkinson’s disease?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q22" role="region" aria-labelledby="faq-q22" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>No.</strong> A red or highlighted region simply indicates that the convolutional neural network focused heavily on the visual features in that area when generating its output score. It is not biological proof of a tremor, nor does it confirm the presence of Parkinson’s disease pathology.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q23 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q23" aria-expanded="false" aria-controls="faq-ans-q23">
+                  <span class="faq-q-number">Q23.</span>
+                  <span class="faq-q-text">Why does the Grad-CAM image sometimes look different from the original spiral?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q23" role="region" aria-labelledby="faq-q23" hidden>
+                  <div class="faq-answer-inner">
+                    <p>The final convolutional layer of EfficientNetV2-S outputs feature maps with coarse spatial resolution (a 7&times;7 grid). To display an overlay on the original drawing, this map is upsampled via bilinear interpolation to 224&times;224 pixels and blended with the original drawing using an alpha transparency overlay (approx. 40% heatmap, 60% original image). This results in smooth, luminous gradients rather than razor-sharp pen contours.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q24 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q24" aria-expanded="false" aria-controls="faq-ans-q24">
+                  <span class="faq-q-number">Q24.</span>
+                  <span class="faq-q-text">What if the Grad-CAM visualization is unavailable?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q24" role="region" aria-labelledby="faq-q24" hidden>
+                  <div class="faq-answer-inner">
+                    <p>In SpiralSense, model prediction and Grad-CAM generation are structured as independent execution blocks in <code>app.py</code>. If an error occurs during Grad-CAM generation (e.g. GPU memory exhaustion or tensor formatting), the prediction results—including classification, probabilities, and MC Dropout uncertainty—remain completely accessible, and an explanation notice is displayed.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category F — Privacy, Safety & Limitations -->
+          <div class="faq-category is-collapsed" id="cat-safety">
+            <button
+              type="button"
+              class="faq-category-header"
+              id="cat-btn-cat-safety"
+              aria-expanded="false"
+              aria-controls="cat-group-safety"
+              aria-label="Expand Category F — Privacy, Safety & Limitations"
+            >
+              <div class="faq-category-info">
+                <h3 class="faq-category-title">Category F — Privacy, Safety & Limitations</h3>
+                <p class="faq-category-desc">Responsible AI use, image data retention, current constraints, and future research directions.</p>
+              </div>
+              <svg class="faq-category-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-accordion-group" id="cat-group-safety" hidden>
+              <!-- Q25 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q25" aria-expanded="false" aria-controls="faq-ans-q25">
+                  <span class="faq-q-number">Q25.</span>
+                  <span class="faq-q-text">Are the model predictions medical advice?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q25" role="region" aria-labelledby="faq-q25" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>No.</strong> SpiralSense is an academic research prototype. All outputs, probabilities, confidence scores, and visual overlays are provided strictly for research, scientific evaluation, and educational inquiry. They do not constitute medical advice, clinical diagnosis, or treatment recommendations.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q26 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q26" aria-expanded="false" aria-controls="faq-ans-q26">
+                  <span class="faq-q-number">Q26.</span>
+                  <span class="faq-q-text">Does the heatmap prove that the model is reasoning correctly?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q26" role="region" aria-labelledby="faq-q26" hidden>
+                  <div class="faq-answer-inner">
+                    <p><strong>No.</strong> Saliency heatmaps visualize mathematical correlation between input pixels and output gradients, not causal medical reasoning. A model may highlight a line irregularity or stroke boundary while still failing to generalize to clinical motor signs.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Q27 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q27" aria-expanded="false" aria-controls="faq-ans-q27">
+                  <span class="faq-q-number">Q27.</span>
+                  <span class="faq-q-text">What happens to uploaded images?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q27" role="region" aria-labelledby="faq-q27" hidden>
+                  <div class="faq-answer-inner">
+                    <p>SpiralSense enforces strict data minimization verified in <code>app.py</code>:</p>
+<ul>
+  <li>Uploaded drawings are saved temporarily to a secure unique path in the <code>uploads/</code> directory solely for the duration of inference.</li>
+  <li>Immediately after prediction and Grad-CAM generation finish, the temporary image file is automatically deleted from disk in a <code>finally</code> block (<code>temp_path.unlink(missing_ok=True)</code>).</li>
+  <li>No uploaded drawings are permanently stored, cataloged, or transmitted to third-party cloud services.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Q28 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q28" aria-expanded="false" aria-controls="faq-ans-q28">
+                  <span class="faq-q-number">Q28.</span>
+                  <span class="faq-q-text">What are the current limitations of SpiralSense?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q28" role="region" aria-labelledby="faq-q28" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Verified technical limitations include:</p>
+<ul>
+  <li><strong>Static 2D images:</strong> Analyzes only static visual scans; it does not capture temporal dynamic signals such as drawing speed, pen-tip acceleration, pressure, or in-air hesitation times.</li>
+  <li><strong>Small sample sizes:</strong> Developed on 102 spiral drawings and evaluated on 264 external samples, representing a limited demographic and clinical range.</li>
+  <li><strong>Binary scope:</strong> Focuses only on Parkinson’s vs. Healthy; it cannot perform differential diagnosis against Essential Tremor or other neurological disorders.</li>
+  <li><strong>No clinical trial validation:</strong> Has not undergone prospective clinical trials in healthcare settings.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Q29 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q29" aria-expanded="false" aria-controls="faq-ans-q29">
+                  <span class="faq-q-number">Q29.</span>
+                  <span class="faq-q-text">How can this project be improved in the future?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q29" role="region" aria-labelledby="faq-q29" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Potential future research directions include:</p>
+<ul>
+  <li>Integrating digital digitizing tablet sensor data (measuring pen speed, acceleration, pen-up time, and pressure dynamics).</li>
+  <li>Expanding multi-center clinical validation across diverse patient age groups and disease stages.</li>
+  <li>Developing multi-class differential screening for Essential Tremor and atypical parkinsonian syndromes.</li>
+  <li>Incorporating Conformal Prediction sets with mathematical coverage guarantees for selective abstention on borderline cases.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Q30 -->
+              <div class="faq-item">
+                <button type="button" class="faq-question" id="faq-q30" aria-expanded="false" aria-controls="faq-ans-q30">
+                  <span class="faq-q-number">Q30.</span>
+                  <span class="faq-q-text">Where can I find more technical details?</span>
+                  <span class="faq-toggle-icon" aria-hidden="true">
+                    <svg class="icon-plus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg class="icon-minus" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </span>
+                </button>
+                <div class="faq-answer" id="faq-ans-q30" role="region" aria-labelledby="faq-q30" hidden>
+                  <div class="faq-answer-inner">
+                    <p>Technical documentation, source code, and artifacts are located directly in the project repository:</p>
+<ul>
+  <li><code>README.md</code> &amp; <code>PROJECT_NOTES.md</code>: Architectural overview, base paper alignment, and caveats.</li>
+  <li><code>src/predict.py</code>: Prediction pipeline, MC Dropout probe, and temperature scaling implementation.</li>
+  <li><code>src/gradcam_explain.py</code>: Standalone and web Grad-CAM generation logic.</li>
+  <li><code>artifacts/combined_evaluation/combined_metrics.csv</code>: Empirical test metrics across both datasets.</li>
+  <li><code>artifacts/temperature.json</code>: Fitted Platt temperature calibration parameter.</li>
+</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </section>
 
